@@ -121,7 +121,7 @@ else:
     # --- MAIN PAGE ---
     st.title(":chart_with_upwards_trend: Serie de Tiempo")
     st.subheader(f"Predicción de la variación de la relación del precio de apertura de las monedas "
-                 f"{pair[0:3]}/{pair[4:7]} haciendo"
+                 f"{pair[0:3]}/{pair[4:7]} haciendo "
                  f"uso de series de tiempo (forecasting). Los datos fueron obtenidos de OANDA.")
 
     st.markdown("---")
@@ -156,7 +156,6 @@ else:
 
     data.rename(columns={'time': 'ds', 'open_bid': 'y'}, inplace=True)
     
-
     prediction = model_exchange.predict(pd.DataFrame({'ds':data['ds']}))
     y_actual = data['y']
     y_predicted = prediction['yhat']
