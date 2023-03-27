@@ -154,14 +154,14 @@ else:
     st.pyplot(fig)
 
     # display line plot train and test data with plotly dark theme
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.title.set_text('Train y test')
-    plt.xlabel('Dates')
-    plt.ylabel('Open bid')
-    plt.plot(training_data['open_bid'], 'green', label = 'training_data')
-    plt.plot(testing_data['open_bid'], 'blue', label = 'testing_data')
-    plt.legend()
-    st.pyplot(fig)
+    #fig, ax = plt.subplots(figsize=(10, 6))
+    #ax.title.set_text('Train y test')
+    #plt.xlabel('Dates')
+    #plt.ylabel('Open bid')
+    #plt.plot(training_data['open_bid'], 'green', label = 'training_data')
+    #plt.plot(testing_data['open_bid'], 'blue', label = 'testing_data')
+    #plt.legend()
+    #st.pyplot(fig)
 
 
     # Load pickles
