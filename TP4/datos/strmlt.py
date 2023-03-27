@@ -150,4 +150,16 @@ else:
     ax.grid(False)
     st.pyplot(fig)
 
+    # Load pickles
+    with open('TP4/datos/exchange.pkl', 'rb') as f:
+        model_exchange = pickle.load(f)
+
+    data.rename(columns={'time': 'ds', 'open_bid': 'y'}, inplace=True)
+    
+
+    prediction = model_exchange.predict(pd.DataFrame({'ds':data['ds']}))
+    y_actual = data['y']
+    y_predicted = prediction['yhat']
+    st.write(f'Mean absolute error es {mean_absolute_error(y_actual, y_predicted)}')
+
 
