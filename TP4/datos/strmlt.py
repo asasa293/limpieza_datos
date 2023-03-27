@@ -4,6 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, mean_squared_error, r2_score, roc_auc_score, mean_absolute_error
 import statsmodels.api as sm
 from fbprophet.plot import plot_plotly as go
@@ -142,6 +143,8 @@ else:
         ax.grid(False)
         st.pyplot(fig)
 
+    training_data, testing_data = train_test_split(data, test_size=0.3, random_state=42, shuffle=False)
+    
     # display line plot with plotly dark theme
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.title.set_text('Serie de Tiempo')
@@ -150,15 +153,49 @@ else:
     ax.grid(False)
     st.pyplot(fig)
 
+    # display line plot train and test data with plotly dark theme
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.title.set_text('Train y test')
+    plt.xlabel('Dates')
+    plt.ylabel('Open bid')
+    plt.plot(training_data['open_bid'], 'green', label = 'training_data')
+    plt.plot(testing_data['open_bid'], 'blue', label = 'testing_data')
+    plt.legend()
+    st.pyplot(fig)
+
+
     # Load pickles
     with open('TP4/datos/exchange.pkl', 'rb') as f:
         model_exchange = pickle.load(f)
 
     data.rename(columns={'time': 'ds', 'open_bid': 'y'}, inplace=True)
-    
+    training_data.rename(columns={'time': 'ds', 'open_bid': 'y'}, inplace=True)
+    testing_data.rename(columns={'time': 'ds', 'open_bid': 'y'}, inplace=True)
+
     prediction = model_exchange.predict(pd.DataFrame({'ds':data['ds']}))
     y_actual = data['y']
     y_predicted = prediction['yhat']
-    st.write(f'Mean absolute error es {mean_absolute_error(y_actual, y_predicted)}')
+    mse_prophet = mean_squared_error(y_actual, y_predicted, squared=False)
+    mae_prophet = mean_absolute_error(y_actual, y_predicted)
+
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.subheader("Usando Prophet:")
+        st.metric(label="El MAE para el modelo es:",
+                  value=f"{mae_prophet:.4f}")
+        st.metric(label="El MAE para el modelo es:",
+                  value=f"{mse_prophet:.8f}")
+        
+    
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.title.set_text('Calculando Predicciones')
+    sns.lineplot(data=testing_data, x='ds', y=y_actual, ax=ax, palette='pastel', label = 'Real')
+    sns.lineplot(data=testing_data, x='ds', y=y_predicted, ax=ax, palette='pastel', label = 'Predicción')
+    # Hide grid lines
+    ax.grid(False)
+    st.pyplot(fig)
 
 
+
+
+    
